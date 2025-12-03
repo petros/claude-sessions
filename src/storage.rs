@@ -44,8 +44,7 @@ impl Storage {
     }
 
     pub fn save(&self, store: &Store) -> Result<()> {
-        let content = serde_json::to_string_pretty(store)
-            .context("Could not serialize store")?;
+        let content = serde_json::to_string_pretty(store).context("Could not serialize store")?;
 
         fs::write(&self.path, content)
             .with_context(|| format!("Could not write data file: {:?}", self.path))?;

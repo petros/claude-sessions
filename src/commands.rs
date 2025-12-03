@@ -145,7 +145,11 @@ pub fn list(storage: &Storage, label: Option<&str>) -> Result<()> {
                     println!("    Path: {}", session.path.dimmed());
                     println!(
                         "    Created: {}",
-                        session.created_at.format("%Y-%m-%d %H:%M:%S").to_string().dimmed()
+                        session
+                            .created_at
+                            .format("%Y-%m-%d %H:%M:%S")
+                            .to_string()
+                            .dimmed()
                     );
                     if let Some(ref desc) = session.description {
                         println!("    Description: {}", desc);
@@ -240,11 +244,7 @@ pub fn describe(storage: &Storage, label: &str, description: Option<String>) -> 
             label.cyan(),
             desc
         ),
-        None => println!(
-            "{} Cleared description for '{}'",
-            "✓".green(),
-            label.cyan()
-        ),
+        None => println!("{} Cleared description for '{}'", "✓".green(), label.cyan()),
     }
 
     Ok(())
