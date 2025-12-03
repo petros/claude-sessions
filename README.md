@@ -110,6 +110,24 @@ claude-sessions add FRONT-12345 d4e5f6-session-id -d "Found root cause, implemen
 claude-sessions list FRONT-12345
 ```
 
+## Development
+
+This project uses [just](https://github.com/casey/just) as a command runner (optional).
+
+```bash
+# Install just (macOS)
+brew install just
+
+# List all available recipes
+just
+
+# Common commands
+just build    # Build debug binary
+just release  # Build release binary
+just check    # Run fmt, lint, and tests
+just install  # Install locally
+```
+
 ## License
 
 MIT
