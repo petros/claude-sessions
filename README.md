@@ -131,10 +131,17 @@ just check    # Run fmt, lint, and tests
 just install  # Install locally
 ```
 
-## License
+### Creating a Release
 
-MIT
+Releases are automated via GitHub Actions. To create a new release:
 
-## Contributing
+1. Update the version in `Cargo.toml`
+2. Commit and tag:
+   ```bash
+   git add Cargo.toml
+   git commit -m "Bump version to X.Y.Z"
+   git tag vX.Y.Z
+   git push origin main --tags
+   ```
 
-Contributions are welcome! Please open an issue or submit a pull request.
+The workflow will automatically build binaries for all platforms and create a GitHub release with checksums.
