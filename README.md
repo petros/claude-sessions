@@ -1,5 +1,7 @@
 # claude-sessions
 
+![Rust action status](https://github.com/petros/drem/actions/workflows/rust.yml/badge.svg) [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square)](https://makeapullrequest.com)
+
 A CLI tool for managing and organizing [Claude Code](https://claude.ai/code) sessions.
 
 Map meaningful labels to session IDs, track multiple sessions per label, and resume your work with a simple command.
@@ -87,6 +89,7 @@ claude-sessions config
 ## Data Storage
 
 Sessions are stored in a JSON file at:
+
 - **macOS**: `~/Library/Application Support/claude-sessions/data.json`
 - **Linux**: `~/.config/claude-sessions/data.json`
 
