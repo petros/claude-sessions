@@ -1,0 +1,98 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+env:
+  CARGO_TERM_COLOR: always
+  BINARY_NAME: claude-sessions
+
+jobs:
+  build:
+    name: Build (${{ matrix.target }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        include:
+          - os: ubuntu-latest
+            target: x86_64-unknown-linux-gnu
+            artifact_name: claude-sessions-linux-x86_64
+          - os: macos-latest
+            target: x86_64-apple-darwin
+            artifact_name: claude-sessions-macos-x86_64
+          - os: macos-latest
+            target: aarch64-apple-darwin
+            artifact_name: claude-sessions-macos-aarch64
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust toolchain
+        run: rustup target add ${{ matrix.target }}
+
+      - uses: Swatinem/rust-cache@v2
+        with:
+          key: ${{ matrix.target }}
+
+      - name: Build
+        run: cargo build --release --target ${{ matrix.target }}
+
+      - name: Prepare artifact
+        run: |
+          mkdir -p artifacts
+          cp target/${{ matrix.target }}/release/${{ env.BINARY_NAME }} artifacts/${{ matrix.artifact_name }}
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.artifact_name }}
+          path: artifacts/${{ matrix.artifact_name }}
+
+  release:
+    name: Create Release
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+          merge-multiple: true
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum * > checksums-sha256.txt
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true
+          body: |
+            ## Installation
+
+            Download the appropriate binary for your platform and make it executable:
+
+            ```bash
+            chmod +x claude-sessions-*
+            ```
+
+            ## Verify Checksums
+
+            After downloading, verify the integrity of your download:
+
+            ```bash
+            # Download checksums-sha256.txt, then:
+            sha256sum -c checksums-sha256.txt --ignore-missing
+            ```
+
+            ---
+
+          files: artifacts/*
